@@ -1,0 +1,1 @@
+# AI-Powered-Multi-Crop-Disease-Detection-Platform-for-Smart-Agriculture
