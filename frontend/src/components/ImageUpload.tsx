@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { Camera, Lightbulb, Loader2, Zap } from 'lucide-react';
 
 interface ImageUploadProps {
   onImageSelected: (file: File, preview: string) => void;
@@ -27,7 +28,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelected, onAnalyze, p
   return (
     <div className="space-y-4">
       {/* Upload Zone */}
-      <div 
+      <div
         onClick={() => !previewUrl && fileInputRef.current?.click()}
         className="relative w-full aspect-[4/3] max-h-[400px] bg-[#E8F5E9] border-2 border-dashed border-green-brand/60 rounded-xl flex flex-col items-center justify-center p-6 cursor-pointer hover:bg-green-100 transition-colors overflow-hidden"
       >
@@ -42,20 +43,19 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelected, onAnalyze, p
           </div>
         ) : (
           <div className="flex flex-col items-center gap-3">
-            <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-3xl shadow-sm text-green-brand">
-              📷
+            <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-sm text-green-brand">
+              <Camera className="w-8 h-8" strokeWidth={1.75} />
             </div>
             <p className="text-slate-600 font-semibold text-lg">Click to browse or drop image</p>
             <p className="text-slate-400 text-sm">PNG, JPG up to 10MB</p>
           </div>
         )}
-        
-        {/* Invisible overlay for clicks when preview is present */}
+
         {previewUrl && (
-           <div 
-             className="absolute inset-0 cursor-pointer" 
-             onClick={() => fileInputRef.current?.click()} 
-           />
+          <div
+            className="absolute inset-0 cursor-pointer"
+            onClick={() => fileInputRef.current?.click()}
+          />
         )}
       </div>
 
@@ -73,7 +73,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelected, onAnalyze, p
           onClick={() => fileInputRef.current?.click()}
           className="btn-green flex-1 text-sm py-3"
         >
-          <span className="text-lg">📷</span> Choose image
+          <Camera className="w-5 h-5" /> Choose image
         </button>
         <button
           onClick={onAnalyze}
@@ -81,9 +81,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelected, onAnalyze, p
           className="btn-purple flex-1 text-sm py-3 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isAnalyzing ? (
-            <><span className="animate-spin">⚙️</span> Analyzing...</>
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" /> Analyzing...
+            </>
           ) : (
-            <><span className="text-lg">⚡</span> Analyze with AI</>
+            <>
+              <Zap className="w-5 h-5" fill="currentColor" strokeWidth={0} /> Analyze with AI
+            </>
           )}
         </button>
       </div>
@@ -91,7 +95,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelected, onAnalyze, p
       {/* Photography Tips */}
       <div className="bg-slate-100 rounded-xl p-4 border border-slate-200/60 mt-6">
         <div className="flex items-center gap-2">
-          <span className="text-blue-400 text-lg">💡</span>
+          <Lightbulb className="w-5 h-5 text-blue-400" />
           <span className="text-slate-500 text-sm font-medium">Photography Tips for Best Results</span>
         </div>
       </div>

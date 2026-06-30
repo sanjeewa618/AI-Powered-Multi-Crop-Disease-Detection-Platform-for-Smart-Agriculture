@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Bot, Send } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -11,13 +12,13 @@ const initialMessages: Message[] = [
   {
     id: '1',
     role: 'ai',
-    text: '👋 Hello! I\'m your AI crop disease assistant. You can ask me about any plant disease, treatment methods, or upload a leaf image below for instant AI diagnosis!',
+    text: "Hello! I'm your AI crop disease assistant. You can ask me about any plant disease, treatment methods, or upload a leaf image below for instant AI diagnosis!",
     timestamp: new Date(),
   },
   {
     id: '2',
     role: 'ai',
-    text: '🌿 Try asking: "What causes tomato blight?" or "How do I treat powdery mildew?" — or simply upload a leaf photo below.',
+    text: 'Try asking: "What causes tomato blight?" or "How do I treat powdery mildew?" — or simply upload a leaf photo below.',
     timestamp: new Date(),
   },
 ];
@@ -51,13 +52,12 @@ const ChatSection: React.FC = () => {
     setInput('');
     setIsTyping(true);
 
-    // Simulate AI response
     setTimeout(() => {
       const aiResponses: Record<string, string> = {
-        blight: '🍅 Tomato Early Blight is caused by the fungus *Alternaria solani*. Symptoms include dark spots with concentric rings on older leaves. Apply copper-based fungicide and remove infected leaves immediately.',
-        rust: '🌾 Leaf rust is a fungal disease. Treatment includes applying fungicides containing propiconazole or tebuconazole. Ensure good air circulation between plants.',
-        mildew: '🍃 Powdery mildew can be treated with sulfur-based sprays or neem oil. Remove severely infected parts and avoid overhead watering.',
-        default: '🤖 That\'s a great question! For the most accurate diagnosis, try uploading a photo of the affected leaf below. I can analyze it instantly using our AI model trained on 38 crop disease classes.',
+        blight: 'Tomato Early Blight is caused by the fungus *Alternaria solani*. Symptoms include dark spots with concentric rings on older leaves. Apply copper-based fungicide and remove infected leaves immediately.',
+        rust: 'Leaf rust is a fungal disease. Treatment includes applying fungicides containing propiconazole or tebuconazole. Ensure good air circulation between plants.',
+        mildew: 'Powdery mildew can be treated with sulfur-based sprays or neem oil. Remove severely infected parts and avoid overhead watering.',
+        default: "That's a great question! For the most accurate diagnosis, try uploading a photo of the affected leaf below. I can analyze it instantly using our AI model trained on 38 crop disease classes.",
       };
 
       const lowerText = text.toLowerCase();
@@ -83,7 +83,9 @@ const ChatSection: React.FC = () => {
       <div className="flex items-center justify-between px-5 py-3.5 border-b border-border-default bg-bg-hover">
         <div className="flex items-center gap-2.5">
           <div className="relative">
-            <div className="w-8 h-8 bg-green-primary rounded-full flex items-center justify-center text-sm">🤖</div>
+            <div className="w-8 h-8 bg-green-primary rounded-full flex items-center justify-center">
+              <Bot className="w-4 h-4 text-white" strokeWidth={2} />
+            </div>
             <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-bright rounded-full border-2 border-bg-secondary"></div>
           </div>
           <div>
@@ -105,7 +107,9 @@ const ChatSection: React.FC = () => {
             className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-slide-in`}
           >
             {msg.role === 'ai' && (
-              <div className="w-6 h-6 rounded-full bg-green-primary flex items-center justify-center text-xs mr-2 mt-1 flex-shrink-0">🤖</div>
+              <div className="w-6 h-6 rounded-full bg-green-primary flex items-center justify-center mr-2 mt-1 flex-shrink-0">
+                <Bot className="w-3.5 h-3.5 text-white" strokeWidth={2} />
+              </div>
             )}
             <div className="flex flex-col gap-1">
               <div className={msg.role === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}>
@@ -120,7 +124,9 @@ const ChatSection: React.FC = () => {
 
         {isTyping && (
           <div className="flex justify-start animate-fade-in">
-            <div className="w-6 h-6 rounded-full bg-green-primary flex items-center justify-center text-xs mr-2 flex-shrink-0">🤖</div>
+            <div className="w-6 h-6 rounded-full bg-green-primary flex items-center justify-center mr-2 flex-shrink-0">
+              <Bot className="w-3.5 h-3.5 text-white" strokeWidth={2} />
+            </div>
             <div className="chat-bubble-ai flex items-center gap-1">
               <span className="w-2 h-2 bg-text-muted rounded-full animate-bounce [animation-delay:0ms]"></span>
               <span className="w-2 h-2 bg-text-muted rounded-full animate-bounce [animation-delay:150ms]"></span>
@@ -159,7 +165,7 @@ const ChatSection: React.FC = () => {
           disabled={!input.trim()}
           className="btn-primary py-2.5 px-4 disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          ➤
+          <Send className="w-4 h-4" />
         </button>
       </div>
     </div>

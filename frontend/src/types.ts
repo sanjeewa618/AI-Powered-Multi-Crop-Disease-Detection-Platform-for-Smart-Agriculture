@@ -1,12 +1,3 @@
-export interface DiseaseResult {
-  name: string;
-  crop: string;
-  condition: string;
-  confidence: number;
-  severity: 'Low' | 'Moderate' | 'High' | 'Critical';
-  description: string;
-  treatments: string[];
-  preventions: string[];
-  localRemedies: string[];
-  costEffective: string[];
-}
+export type { DiseaseResult, ScanHistoryItem } from './disease';
+export type { UserRole, RolePermissions } from './roles';
+export { ROLE_PERMISSIONS, ROLE_LABELS } from './roles';
