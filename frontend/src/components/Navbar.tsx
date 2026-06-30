@@ -15,7 +15,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
           🌱
         </div>
         <div className="flex flex-col justify-center">
-          <div className="text-emerald-500 font-bold text-lg leading-none mb-1 tracking-wide">KrishiMitra AI</div>
+          <div className="text-emerald-500 font-bold text-lg leading-none mb-1 tracking-wide">KrushiMitra AI</div>
           <div className="text-slate-400 text-xs leading-none">Smart Agriculture Companion</div>
         </div>
         <div className="ml-2 px-3 py-1 rounded-full bg-[#112423] border border-emerald-800/60 flex items-center gap-1.5">
