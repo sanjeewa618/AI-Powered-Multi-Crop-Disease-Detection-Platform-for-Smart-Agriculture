@@ -1,15 +1,50 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Sprout, UserPlus } from 'lucide-react';
+import { registerUser } from '../lib/api';
 
 const provinces = ['Western', 'Central', 'Southern', 'Northern', 'Eastern', 'North Western', 'North Central', 'Uva', 'Sabaragamuwa'];
 const crops = ['Rice', 'Tomato', 'Tea', 'Coconut', 'Vegetables', 'Fruits', 'Spices'];
 
 const SignUpPage: React.FC = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [language, setLanguage] = useState('en');
+  const [form, setForm] = useState({ fullName: '', email: '', phone: '', username: '', password: '', confirmPassword: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (form.password !== form.confirmPassword) {
+      setErrorMessage('Passwords do not match');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setErrorMessage('');
+
+    try {
+      const result = await registerUser({
+        full_name: form.fullName,
+        email: form.email,
+        phone: form.phone,
+        username: form.username,
+        password: form.password,
+        role: 'farmer',
+      });
+      localStorage.setItem('auth_token', result.access_token);
+      localStorage.setItem('user_role', result.role);
+      localStorage.setItem('user_email', result.email);
+      navigate('/dashboard');
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Registration failed');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex overflow-hidden bg-theme-main">
@@ -57,7 +92,7 @@ const SignUpPage: React.FC = () => {
             <p className="text-slate-500 mt-2 text-base">Create your farmer account and start exploring smart agriculture tools.</p>
           </div>
 
-          <form className="bg-white rounded-[24px] border border-slate-200/80 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.25)] p-6 sm:p-8 space-y-6" onSubmit={(e) => e.preventDefault()}>
+          <form className="bg-white rounded-[24px] border border-slate-200/80 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.25)] p-6 sm:p-8 space-y-6" onSubmit={handleSubmit}>
             <section className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4 sm:p-5">
               <div className="flex items-center gap-2 mb-4">
                 <div className="h-2.5 w-2.5 rounded-full bg-green-brand" />
@@ -66,15 +101,15 @@ const SignUpPage: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Full Name</label>
-                  <input type="text" placeholder="Sunil Perera" className="form-input" />
+                  <input type="text" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} placeholder="Sunil Perera" className="form-input" />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email</label>
-                  <input type="email" placeholder="farmer@example.com" className="form-input" />
+                  <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="farmer@example.com" className="form-input" />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Phone Number</label>
-                  <input type="tel" placeholder="+94 77 123 4567" className="form-input" />
+                  <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+94 77 123 4567" className="form-input" />
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">NIC (Optional)</label>
@@ -91,12 +126,12 @@ const SignUpPage: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Username</label>
-                  <input type="text" placeholder="sunil_farmer" className="form-input" />
+                  <input type="text" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} placeholder="sunil_farmer" className="form-input" />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
                   <div className="relative">
-                    <input type={showPassword ? 'text' : 'password'} placeholder="Min. 8 characters" className="form-input pr-12" />
+                    <input type={showPassword ? 'text' : 'password'} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="Min. 8 characters" className="form-input pr-12" />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -105,7 +140,7 @@ const SignUpPage: React.FC = () => {
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Confirm Password</label>
                   <div className="relative">
-                    <input type={showConfirmPassword ? 'text' : 'password'} placeholder="Confirm password" className="form-input pr-12" />
+                    <input type={showConfirmPassword ? 'text' : 'password'} value={form.confirmPassword} onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })} placeholder="Confirm password" className="form-input pr-12" />
                     <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                       {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -190,12 +225,14 @@ const SignUpPage: React.FC = () => {
               </span>
             </label>
 
-            <Link
-              to="/home"
+            {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
+            <button
+              type="submit"
+              disabled={!accepted || isSubmitting}
               className={`btn-green w-full py-3 text-base ${!accepted ? 'opacity-50 pointer-events-none' : ''}`}
             >
-              <UserPlus className="w-5 h-5" /> Register
-            </Link>
+              <UserPlus className="w-5 h-5" /> {isSubmitting ? 'Creating account...' : 'Register'}
+            </button>
           </form>
 
           <p className="text-center text-sm text-slate-500 mt-6">
